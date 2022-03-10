@@ -1,13 +1,14 @@
-
 class Calculator:
-    def add(self, a, b):
-        return a + b
+    def choose_operation(self, operation,x,y):
+        if operation == '+':
+            return x + y
+        elif operation == '-':
+             return x - y
+        elif operation == '/':
+            return x/y
+        elif operation=='X':
+            return x * y
+        else:
+            print("no")
 
-    def subtract(self, a, b):
-        return a - b
 
-    def multiply(self, a, b):
-        return a * b
-
-    def divide(self, a, b):
-        return a / b
