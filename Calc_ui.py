@@ -1,68 +1,46 @@
 from tkinter import *
+
+from pyparsing import ParseException
+
 from Calc_brain import Calculator
+from Numeric_String_Parser import NumericStringParser
 
 calculator = Calculator()
 FONT = ('Montserrat', 12, 'bold')
-operations = ['+', '-', 'X', '/']
-
-
+nsp = NumericStringParser()
 
 
 class CalcGui:
     def clear(self):
         self.values = []
-        self.x = []
-        self.y = []
-        self.operation = ''
-        self.display_input()
+        self.display_input('0')
 
-    def display_input(self):
-        self.display.config(text=self.values)
-        # print(self.values)  # tester
+    def display_percentage(self):
+        percent_value = calculator.percentage(int(''.join(self.values)))
+        self.display_input(percent_value)
+
+    def display_input(self, display):
+        self.display.config(text=display)
 
     def append_value(self, mybutton):
         self.values.append(mybutton)
-        self.display_input()
+        self.display_input(self.values)
         print(self.values)
 
     def input_parser(self, input_values):
-        pre_pop=False
-        for count, num in enumerate(input_values):
+        if len(input_values)>1:
+            try:
+                self.result = str(nsp.eval(''.join(self.values)))
+                self.display_input(self.result)
 
-            if num not in operations:
-                self.x.append(num)
-            else:
-                self.operation = num
-                break
-
-        for num2 in input_values[count + 1::]:
-            if num2 not in operations:
-                self.y.append(num2)
-            else:
-                break
-        temp_x = int(''.join(self.x))
-        temp_y = int(''.join(self.y))
-
-        self.result = calculator.choose_operation(self.operation, temp_x, temp_y)
-        self.values = []
-        print(self.result, 'result')
-        # self.y = [num for num in input_values[count + 1:: ] if num in operations    ]
-        self.display.config(text=self.result)
-        self.x=[]
-        self.values = []
-        self.x = []
-        self.y = []
-        self.operation = ''
-
-        # print(self.y, 'y_value')
-        # print(self.x, 'x value')
-        # print(self.operation, 'operation')
+            except ParseException:
+                self.display_input("Error")
+                self.display.after(1000, self.clear)
+        else:
+            pass
 
     def __init__(self):
         self.values = []
-        self.x = []
-        self.y = []
-        self.operation = ''
         self.result = 0
         self.window = Tk()
         self.window.title('Calculator')
@@ -77,10 +55,10 @@ class CalcGui:
         self.clear_button = Button(text='AC', height=4, width=8, font=FONT, command=self.clear)
         self.plus_minus_button = Button(text='+/-', height=4, width=8, font=FONT)
         self.percentage_button = Button(text='%', height=4, width=8,
-                                        font=FONT)  # no idea figure out what this actually does, Decimal???
+                                        font=FONT, command=self.display_percentage)
         self.div_button = Button(text='/', height=4, width=8, font=FONT,
-                                      command=lambda: self.append_value(
-                                          mybutton=self.div_button.cget('text')))
+                                 command=lambda: self.append_value(
+                                     mybutton=self.div_button.cget('text')))
 
         self.clear_button.grid(column=0, row=1)
         self.plus_minus_button.grid(column=1, row=1)
@@ -93,14 +71,14 @@ class CalcGui:
                                       mybutton=self.num7_button.cget('text')))
 
         self.num8_button = Button(text='8', height=4, width=8, font=FONT,
-                                      command=lambda: self.append_value(
-                                          mybutton=self.num8_button.cget('text')))
+                                  command=lambda: self.append_value(
+                                      mybutton=self.num8_button.cget('text')))
 
         self.num9_button = Button(text='9', height=4, width=8, font=FONT,
-                                      command=lambda: self.append_value(
-                                          mybutton=self.num9_button.cget('text')))
+                                  command=lambda: self.append_value(
+                                      mybutton=self.num9_button.cget('text')))
 
-        self.multiply_button = Button(text='X', height=4, width=8, font=FONT,
+        self.multiply_button = Button(text='*', height=4, width=8, font=FONT,
                                       command=lambda: self.append_value(
                                           mybutton=self.multiply_button.cget('text')))
 
@@ -111,14 +89,14 @@ class CalcGui:
 
         # row 3
         self.num4_button = Button(text='4', height=4, width=8, font=FONT,
-                                      command=lambda: self.append_value(
-                                          mybutton=self.num4_button.cget('text')))
+                                  command=lambda: self.append_value(
+                                      mybutton=self.num4_button.cget('text')))
         self.num5_button = Button(text='5', height=4, width=8, font=FONT,
-                                      command=lambda: self.append_value(
-                                          mybutton=self.num5_button.cget('text')))
+                                  command=lambda: self.append_value(
+                                      mybutton=self.num5_button.cget('text')))
         self.num6_button = Button(text='6', height=4, width=8, font=FONT,
-                                      command=lambda: self.append_value(
-                                          mybutton=self.num6_button.cget('text')))
+                                  command=lambda: self.append_value(
+                                      mybutton=self.num6_button.cget('text')))
         self.subtract_button = Button(text='-', height=4, width=8, font=FONT,
                                       command=lambda: self.append_value(
                                           mybutton=self.subtract_button.cget('text')))
@@ -130,17 +108,17 @@ class CalcGui:
 
         # row 4
         self.num1_button = Button(text='1', height=4, width=8, font=FONT,
-                                      command=lambda: self.append_value(
-                                          mybutton=self.num1_button.cget('text')))
+                                  command=lambda: self.append_value(
+                                      mybutton=self.num1_button.cget('text')))
         self.num2_button = Button(text='2', height=4, width=8, font=FONT,
-                                      command=lambda: self.append_value(
-                                          mybutton=self.num2_button.cget('text')))
+                                  command=lambda: self.append_value(
+                                      mybutton=self.num2_button.cget('text')))
         self.num3_button = Button(text='3', height=4, width=8, font=FONT,
-                                      command=lambda: self.append_value(
-                                          mybutton=self.num3_button.cget('text')))
+                                  command=lambda: self.append_value(
+                                      mybutton=self.num3_button.cget('text')))
         self.add_button = Button(text='+', height=4, width=8, font=FONT,
-                                      command=lambda: self.append_value(
-                                          mybutton=self.add_button.cget('text')))
+                                 command=lambda: self.append_value(
+                                     mybutton=self.add_button.cget('text')))
 
         self.num1_button.grid(column=0, row=4)
         self.num2_button.grid(column=1, row=4)
@@ -149,11 +127,13 @@ class CalcGui:
 
         # row 5
         self.num0_button = Button(text='0', height=4, width=20, font=FONT,
-                                      command=lambda: self.append_value(
-                                          mybutton=self.num0_button.cget('text')))
+                                  command=lambda: self.append_value(
+                                      mybutton=self.num0_button.cget('text')))
         self.equal_button = Button(text='=', height=4, width=8, font=FONT,
                                    command=lambda: self.input_parser(input_values=self.values))
-        self.decimal_button = Button(text='.', height=4, width=8, font=FONT)
+        self.decimal_button = Button(text='.', height=4, width=8, font=FONT,
+                                     command=lambda: self.append_value(
+                                         mybutton=self.decimal_button.cget('text')))
 
         self.num0_button.grid(column=0, row=6, columnspan=2)
         self.decimal_button.grid(column=2, row=6)

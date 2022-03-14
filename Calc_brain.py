@@ -1,14 +1,8 @@
 class Calculator:
-    def choose_operation(self, operation,x,y):
-        if operation == '+':
-            return x + y
-        elif operation == '-':
-             return x - y
-        elif operation == '/':
-            return x/y
-        elif operation=='X':
-            return x * y
-        else:
-            print("no")
+    def percentage(self, x):
+        percent_value = x/100
+        return percent_value
+
+
 
 
